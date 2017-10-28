@@ -3,11 +3,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
+
 def get_passport(link):
     """
-    Prints out three pandas DataFrames based on information from the html got by link variable.
-    First dataframe is made of two lists got by <div class:"numbered"> tags.
-    Second and third dataframes are made of lists got by <div class:"grid"> tags.
+    Prints out 3 pandas DataFrames of information from link given as argument.
+    First dataframe is made of 2 lists got by <div class:"numbered"> tags.
+    Second, third dataframes are made of lists got by <div class:"grid"> tags.
     """
     soup = BeautifulSoup(requests.get(link).text, 'html.parser')
     tabs = soup.find_all("div", {"class": "subtab"})
@@ -32,7 +33,6 @@ def get_passport(link):
     right = spans[1::2]
     table = list(zip(left, right))
     print(pd.DataFrame(table))
-
     info_grid = []
     for subtab in tabs:
         info = subtab.find_all("div", {"class": "grid"})
@@ -54,8 +54,6 @@ def get_passport(link):
         left_grid1.append(el.text)
     table1 = list(zip(left_grid1, right_grid1))
     print(pd.DataFrame(table1))
-
-
     table1 = tabs[3].find("table", {"class": "orders overhaul-services-table"})
     rows_table1 = []
     rows_table1.append([el.text for el in table1.thead.find_all('th')])
